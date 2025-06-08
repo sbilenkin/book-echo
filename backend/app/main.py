@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import FastAPI, Depends, HTTPException, Form
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 
@@ -25,3 +25,19 @@ def health_check(db: Session = Depends(get_db)):
 @app.get("/")
 def read_root():
     return {"message": "Welcome to the FastAPI application!"}
+
+@app.post("/login")
+def login(
+    username: str = Form(...),
+    password: str = Form(...),
+    db: Session = Depends(get_db)
+):
+    # db query to check user credentials
+    user = db.execute(
+        text("SELECT * FROM users WHERE username = :username AND password_hash = :password"),
+        {"username": username, "password": password}
+    ).fetchone()
+    if user:
+        return {"message": "Login successful", "user": user}
+    else:
+        raise HTTPException(status_code=401, detail="Invalid credentials")
