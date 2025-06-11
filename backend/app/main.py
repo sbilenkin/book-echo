@@ -34,7 +34,7 @@ def login(
 ):
     # db query to check user credentials
     user = db.execute(
-        text("SELECT * FROM users WHERE username = :username AND password_hash = :password"),
+        text("SELECT * FROM users WHERE username = :username AND password = :password"),
         {"username": username, "password": password}
     ).fetchone()
     if user:
