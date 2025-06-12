@@ -1,25 +1,18 @@
 import { useState } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Login from './Login'
+import Home from './Home'
 import './App.css'
 
-function Home() {
-  return (
-    <div>
-      Home!!!!
-    </div>
-  )
-}
-
 function App() {
-  const [count, setCount] = useState(0)
+  const [loggedIn, setLoggedIn] = useState(sessionStorage.getItem('loggedIn') === 'true')
 
   return (
     <BrowserRouter>
       <div className="App">
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
+          <Route path="/" element={<Home loggedIn={loggedIn} />} />
+          <Route path="/login" element={<Login onLogin={() => setLoggedIn(true)} />} />
           {/* Add more routes as needed */}
         </Routes>
       </div>

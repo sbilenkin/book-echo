@@ -1,21 +1,45 @@
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.css';
 
-function Login() {
+function Login({onLogin}) {
+    const [message, setMessage] = useState('');
+    const navigate = useNavigate();
+
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        const formData = new FormData(event.target);
+        const response = await fetch('http://localhost:8000/login', {
+            method: 'POST',
+            body: formData,
+        });
+        const data = await response.json();
+        if (response.ok) {
+            setMessage(data.message);
+            sessionStorage.setItem('loggedIn', 'true');
+            if (onLogin) onLogin();
+            navigate('/');
+        } else {
+            setMessage(data.detail || 'Login failed');
+        }
+    };
+
     return (
         <div className="Login">
-            <form action="https://organic-space-engine-qrvr9r6pwjc9q76-8000.app.github.dev/login" method="POST">
+            <form onSubmit={handleSubmit}>
                 <div>
-                    <label for="username">Username </label>
+                    <label htmlFor="username">Username </label>
                     <input id="username" type="text" name="username" required />
                 </div>
                 <div>
-                    <label for="password">Password </label>
+                    <label htmlFor="password">Password </label>
                     <input id="password" type="password" name="password" required />
                 </div>
                 <div>
                     <button className="btn btn-primary" type="submit">Login</button>
                 </div>
             </form>
+            {message && <div className="alert alert-info mt-3">{message}</div>}
         </div>
     )
 }

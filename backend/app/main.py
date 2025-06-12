@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Depends, HTTPException, Form
+from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 
@@ -6,7 +7,14 @@ from app.db.database import SessionLocal
 
 app = FastAPI()
 
-# Database check
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 def get_db():
     db = SessionLocal()
     try:
@@ -14,6 +22,7 @@ def get_db():
     finally:
         db.close()
 
+# Database health check endpoint, will remove in prod
 @app.get("/health")
 def health_check(db: Session = Depends(get_db)):
     try:
@@ -36,7 +45,7 @@ def login(
     user = db.execute(
         text("SELECT * FROM users WHERE username = :username AND password = :password"),
         {"username": username, "password": password}
-    ).fetchone()
+    ).mappings().fetchone()
     if user:
         return {"message": "Login successful", "user": user}
     else:
