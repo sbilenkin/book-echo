@@ -4,13 +4,15 @@ function Home({ loggedIn, username }) {
     const handleLogout = () => {
         sessionStorage.removeItem('loggedIn');
         sessionStorage.removeItem('username');
-        window.location.reload(); // Reload to reflect the changes
+        window.location.reload();
     };
 
     return (
         <div className="Home">
             {loggedIn && <h2>Welcome, {username}</h2>}
-            <button className="btn btn-primary" onClick={handleLogout}>Log Out</button>
+            {/* will ultimately put a "my books" list on the homepage
+            listing book reviews in order of most recent */}
+            <button id="logout-button" className="btn btn-primary" onClick={handleLogout}>Log Out</button>
         </div>
     );
 }
