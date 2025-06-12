@@ -17,6 +17,8 @@ function Login({onLogin}) {
         if (response.ok) {
             setMessage(data.message);
             sessionStorage.setItem('loggedIn', 'true');
+            sessionStorage.setItem('username', data.user.username);
+            console.log(data.user.username);
             if (onLogin) onLogin();
             navigate('/');
         } else {
