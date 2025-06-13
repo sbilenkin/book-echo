@@ -2,7 +2,9 @@ from fastapi import FastAPI, Depends, HTTPException, Form, Query
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import text
 from sqlalchemy.orm import Session
+from pydantic import BaseModel
 import requests
+import json
 
 from app.db.database import SessionLocal
 
@@ -15,6 +17,13 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+class ReviewCreate(BaseModel):
+    user_id: int
+    title: str
+    author: str
+    rating: int
+    comment: str
 
 def get_db():
     db = SessionLocal()
@@ -62,3 +71,19 @@ def book_search(title: str = Query(...)):
         return {"books": data.get("docs", [])}
     except requests.RequestException as e:
         return {"error": str(e)}
+
+@app.post("/create-review")
+def create_review(
+    review: ReviewCreate, db: Session = Depends(get_db)
+):
+    book_json = json.dumps({"title": review.title, "author": review.author})
+    try:
+        db.execute(
+            text("INSERT INTO reviews (user_id, book, rating, comment) VALUES (:user_id, :book, :rating, :comment)"),
+            {"user_id": review.user_id, "book": book_json, "rating": review.rating, "comment": review.comment}
+        )
+        db.commit()
+        return {"message": "Review created successfully"}
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=str(e))

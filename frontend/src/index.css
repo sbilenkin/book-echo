@@ -24,8 +24,8 @@ a:hover {
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
+  /* display: flex;
+  place-items: center; */
   min-width: 320px;
   min-height: 100vh;
 }
@@ -81,5 +81,32 @@ button:focus-visible {
 
 .book-title, .book-author {
   margin: 0;
+  text-align: left;
+}
+
+.navbar {
+  width: 100%;
+  left: 0;
+  right: 0;
+  position: fixed; /* or 'fixed' if you want it to stay on top while scrolling */
+  top: 0;
+  margin-bottom: 2rem; /* optional: adds space below the navbar */
+  z-index: 1000; /* ensures it stays above other content if needed */
+  border-radius: 0; /* removes rounded corners if present */
+  min-width: 0;
+  box-sizing: border-box;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.book-review-form {
+  max-width: 60%;
+  text-align: left;
+  margin-left: 0;
+  margin-right: auto;
+}
+.book-review-form label,
+.book-review-form textarea,
+.book-review-form select {
   text-align: left;
 }

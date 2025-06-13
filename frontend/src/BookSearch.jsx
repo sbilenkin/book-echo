@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import BookCard from './BookCard';
 
-function BookSearch(){
+function BookSearch() {
     const [books, setBooks] = useState([]);
 
     const handleSearch = async (event) => {
@@ -39,10 +39,10 @@ function BookSearch(){
                 <div>
                     <button className="btn btn-primary" type="submit">Search</button>
                 </div>
-                <ul className="list-group">
-                    {books.map((book, idx) => <BookCard id={`book${idx}`} book={book} />)}
-                </ul>
             </form>
+            <ul className="list-group">
+                {books.map((book, idx) => <BookCard id={`book${idx}`} book={book} />)}
+            </ul>
         </div>
     );
 }
