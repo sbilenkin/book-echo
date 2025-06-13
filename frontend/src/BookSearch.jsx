@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
+import BookCard from './BookCard';
 
 function BookSearch(){
     const [books, setBooks] = useState([]);
@@ -15,8 +16,12 @@ function BookSearch(){
         const response = await fetch(`http://localhost:8000/book-search?title=${encodeURIComponent(title)}`);
         if (response.ok) {
             const data = await response.json();
-            setBooks(data.books || []);
-            console.log('Books fetched:', data.books);
+            const cleanedBooks = (data.books || []).map(book => ({
+                title: book.title || 'Unknown Title',
+                author: book.author_name ? book.author_name.join(', ') : 'Unknown Author',
+            }));
+            setBooks(cleanedBooks);
+            console.log(cleanedBooks)
         } else {
             console.error('Failed to fetch books');
         }
@@ -34,6 +39,9 @@ function BookSearch(){
                 <div>
                     <button className="btn btn-primary" type="submit">Search</button>
                 </div>
+                <ul className="list-group">
+                    {books.map((book, idx) => <BookCard id={`book${idx}`} book={book} />)}
+                </ul>
             </form>
         </div>
     );
