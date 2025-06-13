@@ -1,7 +1,8 @@
-from fastapi import FastAPI, Depends, HTTPException, Form
+from fastapi import FastAPI, Depends, HTTPException, Form, Query
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import text
 from sqlalchemy.orm import Session
+import requests
 
 from app.db.database import SessionLocal
 
@@ -50,3 +51,14 @@ def login(
         return {"message": "Login successful", "user": user}
     else:
         raise HTTPException(status_code=401, detail="Invalid credentials")
+    
+@app.get("/book-search")
+def book_search(title: str = Query(...)):
+    openlibrary_url = f"https://openlibrary.org/search.json?title={title}"
+    try:
+        response = requests.get(openlibrary_url)
+        response.raise_for_status()  # Raises an HTTPError if the response was unsuccessful
+        data = response.json()
+        return {"books": data.get("docs", [])}
+    except requests.RequestException as e:
+        return {"error": str(e)}
