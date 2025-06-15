@@ -22,7 +22,7 @@ function BookCard({ book }) {
         };
         console.log(payload);
         try {
-            const response = await fetch('http://localhost:8000/create-review', {
+            const response = await fetch('https://vigilant-chainsaw-r979r9w4xvhwpwx-8000.app.github.dev/create-review', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

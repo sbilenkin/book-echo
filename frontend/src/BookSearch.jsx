@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import BookCard from './BookCard';
 
-function BookSearch() {
+function BookSearch({ onClose }) {
     const [books, setBooks] = useState([]);
+    const [search, setSearch] = useState('');
 
     const handleSearch = async (event) => {
         event.preventDefault();
@@ -13,7 +14,7 @@ function BookSearch() {
             console.error('Title is required');
             return;
         }
-        const response = await fetch(`http://localhost:8000/book-search?title=${encodeURIComponent(title)}`);
+        const response = await fetch(`https://vigilant-chainsaw-r979r9w4xvhwpwx-8000.app.github.dev/book-search?title=${encodeURIComponent(title)}`);
         if (response.ok) {
             const data = await response.json();
             const cleanedBooks = (data.books || []).map(book => ({
@@ -27,15 +28,22 @@ function BookSearch() {
         }
     };
 
+    const handleClose = () => {
+        setSearch('');
+        setBooks([]);
+        onClose();
+    }
+
     return (
-        <div>
+        <div className="BookSearch">
             <form onSubmit={handleSearch}>
                 <div>
                     <label htmlFor="book-title">Search for a book</label>
                 </div>
                 <div>
-                    <input id="book-title" type="text" name="book-title"></input>
+                    <input id="book-title" type="text" value={search} onChange={e => setSearch(e.target.value)} name="book-title"></input>
                 </div>
+                <button className="close-button" onClick={handleClose}>x</button>
                 <div>
                     <button className="btn btn-primary" type="submit">Search</button>
                 </div>

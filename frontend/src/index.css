@@ -24,8 +24,6 @@ a:hover {
 
 body {
   margin: 0;
-  /* display: flex;
-  place-items: center; */
   min-width: 320px;
   min-height: 100vh;
 }
@@ -85,6 +83,7 @@ button:focus-visible {
 }
 
 .navbar {
+  background-color: #454545;
   width: 100%;
   left: 0;
   right: 0;
@@ -109,4 +108,42 @@ button:focus-visible {
 .book-review-form textarea,
 .book-review-form select {
   text-align: left;
+}
+
+.BookSearch {
+  position: relative;
+  width: 80%;
+  min-width: 300px;
+  margin: 0 auto;
+  background-color: #454545;
+  padding: 1em;
+}
+
+.list-group-item:last-child {
+  margin-bottom: 1em;
+}
+
+.book-card {
+  margin-left: 1em;
+  margin-right: 1em;
+}
+
+.navbar, .navbar * {
+  color: #ffffff !important;
+}
+
+.btn-primary {
+  background-color: #7646c4 !important;
+  border-color: #7646c4 !important;
+}
+
+.close-button {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background-color: transparent;
+  border: none;
+  color: #ffffff;
+  font-size: 1.5rem;
+  cursor: pointer;
 }
