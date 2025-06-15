@@ -88,3 +88,14 @@ def create_review(
     except Exception as e:
         db.rollback()
         raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/reviews")
+def get_reviews(user_id: int = Query(...), db: Session = Depends(get_db)):
+    try:
+        reviews = db.execute(
+            text("SELECT * FROM reviews WHERE user_id = :user_id"),
+            {"user_id": user_id}
+        ).mappings().fetchall()
+        return {"reviews": reviews}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))

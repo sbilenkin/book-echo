@@ -1,9 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import BookSearch from './BookSearch';
+import ReviewList from './ReviewList';
 
 function Home({ loggedIn, username }) {
     const [addingReview, setAddingReview] = useState(false);
+    const [reviews, setReviews] = useState([]);
+
+    useEffect(() => {
+        if (loggedIn) {
+            async function fetchReviews() {
+                const response = await fetch(`https://vigilant-chainsaw-r979r9w4xvhwpwx-8000.app.github.dev/reviews?userId=${sessionStorage.getItem('userId')}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    setReviews(data.reviews || []);
+                } else {
+                    console.error('Failed to fetch reviews');
+                }
+            }
+            fetchReviews();
+        }
+    }, [loggedIn]);
 
     const handleLogout = () => {
         sessionStorage.removeItem('loggedIn');
@@ -51,6 +68,9 @@ function Home({ loggedIn, username }) {
                 <div>
                     {addingReview && <BookSearch onClose={() => setAddingReview(false)} />}
                 </div>
+            </div>
+            <div className="review-list-container">
+                <ReviewList element={reviews} />
             </div>
         </div>
     );
