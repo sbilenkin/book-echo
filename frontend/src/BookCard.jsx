@@ -20,6 +20,7 @@ function BookCard({ book }) {
             comment: reviewText,
             rating: parseInt(rating),
         };
+        console.log(payload);
         try {
             const response = await fetch('http://localhost:8000/create-review', {
                 method: 'POST',
@@ -58,7 +59,7 @@ function BookCard({ book }) {
                     </div>
                     <div className="mb-3">
                         <label htmlFor="rating" className="form-label">Rating</label>
-                        <select className="form-select" id="rating" required>
+                        <select name="rating" className="form-select" id="rating" required>
                             <option value="">Select a rating</option>
                             {[1, 2, 3, 4, 5].map((num) => (
                                 <option key={num} value={num}>{num} Star{num > 1 ? 's' : ''}</option>

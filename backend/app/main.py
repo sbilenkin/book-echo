@@ -22,8 +22,8 @@ class ReviewCreate(BaseModel):
     user_id: int
     title: str
     author: str
-    rating: int
     comment: str
+    rating: int
 
 def get_db():
     db = SessionLocal()
