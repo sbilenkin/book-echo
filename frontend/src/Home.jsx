@@ -11,10 +11,11 @@ function Home({ loggedIn, username }) {
         if (loggedIn) {
             async function fetchReviews() {
                 console.log('Fetching reviews for user:', sessionStorage.getItem('userId'));
-                const response = await fetch(`https://vigilant-chainsaw-r979r9w4xvhwpwx-8000.app.github.dev/reviews?user_id=${sessionStorage.getItem('userId')}`);
+                const response = await fetch(`http://localhost:8000/reviews?user_id=${sessionStorage.getItem('userId')}`);
                 if (response.ok) {
                     const data = await response.json();
                     setReviews(data.reviews || []);
+                    console.log('Fetched reviews:', data.reviews);
                 } else {
                     console.error('Failed to fetch reviews');
                 }

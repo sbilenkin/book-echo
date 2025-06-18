@@ -9,7 +9,7 @@ function Login({onLogin}) {
     const handleSubmit = async (event) => {
         event.preventDefault();
         const formData = new FormData(event.target);
-        const response = await fetch('https://vigilant-chainsaw-r979r9w4xvhwpwx-8000.app.github.dev/login', {
+        const response = await fetch('http://localhost:8000/login', {
             method: 'POST',
             body: formData,
         });

@@ -14,7 +14,7 @@ function BookSearch({ onClose }) {
             console.error('Title is required');
             return;
         }
-        const response = await fetch(`https://vigilant-chainsaw-r979r9w4xvhwpwx-8000.app.github.dev/book-search?title=${encodeURIComponent(title)}`);
+        const response = await fetch(`http://localhost:8000/book-search?title=${encodeURIComponent(title)}`);
         if (response.ok) {
             const data = await response.json();
             const cleanedBooks = (data.books || []).map(book => ({
