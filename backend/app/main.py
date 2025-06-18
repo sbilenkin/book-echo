@@ -92,6 +92,7 @@ def create_review(
 @app.get("/reviews")
 def get_reviews(user_id: int = Query(...), db: Session = Depends(get_db)):
     try:
+        print(f"Fetching reviews for user_id: {user_id}")
         reviews = db.execute(
             text("SELECT * FROM reviews WHERE user_id = :user_id"),
             {"user_id": user_id}

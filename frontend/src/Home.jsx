@@ -10,7 +10,8 @@ function Home({ loggedIn, username }) {
     useEffect(() => {
         if (loggedIn) {
             async function fetchReviews() {
-                const response = await fetch(`https://vigilant-chainsaw-r979r9w4xvhwpwx-8000.app.github.dev/reviews?userId=${sessionStorage.getItem('userId')}`);
+                console.log('Fetching reviews for user:', sessionStorage.getItem('userId'));
+                const response = await fetch(`https://vigilant-chainsaw-r979r9w4xvhwpwx-8000.app.github.dev/reviews?user_id=${sessionStorage.getItem('userId')}`);
                 if (response.ok) {
                     const data = await response.json();
                     setReviews(data.reviews || []);
@@ -20,7 +21,7 @@ function Home({ loggedIn, username }) {
             }
             fetchReviews();
         }
-    }, [loggedIn]);
+    }, [loggedIn, addingReview]);
 
     const handleLogout = () => {
         sessionStorage.removeItem('loggedIn');
@@ -70,7 +71,7 @@ function Home({ loggedIn, username }) {
                 </div>
             </div>
             <div className="review-list-container">
-                <ReviewList element={reviews} />
+                <ReviewList reviews={reviews} />
             </div>
         </div>
     );
