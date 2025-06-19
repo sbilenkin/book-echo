@@ -24,8 +24,6 @@ a:hover {
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
   min-width: 320px;
   min-height: 100vh;
 }
@@ -65,4 +63,121 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+}
+
+.book-card-row {
+  display: flex;
+  align-items: center;
+  /* justify-content: space-between; */
+}
+
+.book-card-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.book-title, .book-author {
+  margin: 0;
+  text-align: left;
+}
+
+.navbar {
+  background-color: #454545;
+  width: 100%;
+  left: 0;
+  right: 0;
+  position: fixed; /* or 'fixed' if you want it to stay on top while scrolling */
+  top: 0;
+  margin-bottom: 2rem; /* optional: adds space below the navbar */
+  z-index: 1000; /* ensures it stays above other content if needed */
+  border-radius: 0; /* removes rounded corners if present */
+  min-width: 0;
+  box-sizing: border-box;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.book-review-form {
+  max-width: 60%;
+  text-align: left;
+  margin-left: 0;
+  margin-right: auto;
+}
+.book-review-form label,
+.book-review-form textarea,
+.book-review-form select {
+  text-align: left;
+}
+
+.BookSearch {
+  position: relative;
+  width: 80%;
+  min-width: 300px;
+  margin: 0 auto;
+  background-color: #454545;
+  padding: 1em;
+}
+
+.list-group-item:last-child {
+  margin-bottom: 1em;
+}
+
+.book-card {
+  margin-left: 1em;
+  margin-right: 1em;
+}
+
+.navbar, .navbar * {
+  color: #ffffff !important;
+}
+
+.btn-primary {
+  background-color: #7646c4 !important;
+  border-color: #7646c4 !important;
+}
+
+.close-button {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background-color: transparent;
+  border: none;
+  color: #ffffff;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.review-list-container {
+  margin-top: 2rem;
+}
+
+.ReviewList {
+  background-color: #454545;
+  padding: 2em;
+  width: 80%;
+  margin: 2rem auto 0 auto;
+}
+
+.title-and-author {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.review-card-row {
+  display: flex;
+  align-items: center;
+  /* justify-content: space-between; */
+}
+
+.review-text {
+  text-align: left;
+}
+
+.book-cover {
+  width: 80px;
+  margin-right: 1rem;
 }
