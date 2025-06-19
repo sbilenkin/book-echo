@@ -20,6 +20,7 @@ function BookSearch({ onClose }) {
             const cleanedBooks = (data.books || []).map(book => ({
                 title: book.title || 'Unknown Title',
                 author: book.author_name ? book.author_name.join(', ') : 'Unknown Author',
+                cover_url: book.cover_url || null,
             }));
             setBooks(cleanedBooks);
             console.log(cleanedBooks)

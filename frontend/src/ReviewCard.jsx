@@ -15,6 +15,9 @@ function ReviewCard({ review }) {
                     {[...Array(review.rating)].map((_, i) => (<i key={i} className="fas fa-star"></i>))}
                 </div>
             </div>
+            <div className="review-text">
+                {review.comment}
+            </div>
         </li>
     );
 }

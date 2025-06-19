@@ -69,7 +69,20 @@ def book_search(title: str = Query(...)):
         response = requests.get(openlibrary_url)
         response.raise_for_status()  # Raises an HTTPError if the response was unsuccessful
         data = response.json()
-        return {"books": data.get("docs", [])}
+        books = []
+        for doc in data.get("docs", []):
+            cover_i = doc.get("cover_i")
+            cover_url = (
+                f"https://covers.openlibrary.org/b/id/{cover_i}-M.jpg"
+                if cover_i else None
+            )
+            books.append({
+                "title": doc.get("title"),
+                "author_name": doc.get("author_name", []),
+                "cover_i": cover_i,
+                "cover_url": cover_url,
+            })
+        return {"books": books}
     except requests.RequestException as e:
         return {"error": str(e)}
 

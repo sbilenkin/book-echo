@@ -45,6 +45,9 @@ function BookCard({ book }) {
     return (
         <li className="list-group-item book-card">
             <div className="book-card-row">
+                {book.cover_url && (<img src={book.cover_url}
+                    alt={`Cover for ${book.title}`}
+                    className="book-cover" />)}
                 <div className="book-card-info">
                     <h5 className="book-title">{book.title}</h5>
                     <p className="book-author">Author: {book.author}</p>
