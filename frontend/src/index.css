@@ -161,6 +161,7 @@ button:focus-visible {
 }
 
 .title-and-author {
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -169,7 +170,7 @@ button:focus-visible {
 .review-card-row {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  /* justify-content: space-between; */
 }
 
 .review-text {

@@ -23,6 +23,7 @@ class ReviewCreate(BaseModel):
     user_id: int
     title: str
     author: str
+    cover_i: int | None = None
     comment: str
     rating: int
 
@@ -90,7 +91,7 @@ def book_search(title: str = Query(...)):
 def create_review(
     review: ReviewCreate, db: Session = Depends(get_db)
 ):
-    book_json = json.dumps({"title": review.title, "author": review.author})
+    book_json = json.dumps({"title": review.title, "author": review.author, "cover_i": review.cover_i})
     try:
         db.execute(
             text("INSERT INTO reviews (user_id, book, rating, comment) VALUES (:user_id, :book, :rating, :comment)"),

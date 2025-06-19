@@ -17,6 +17,7 @@ function BookCard({ book }) {
             user_id: parseInt(sessionStorage.getItem('userId')),
             title: book.title,
             author: book.author,
+            cover_i: book.cover_i,
             comment: reviewText,
             rating: parseInt(rating),
         };
