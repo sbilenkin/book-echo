@@ -38,7 +38,7 @@ function BookSearch({ onClose }) {
 
     return (
         <div className="BookSearch">
-            <form onSubmit={handleSearch}>
+            <form className="book-search-form" onSubmit={handleSearch}>
                 <div>
                     <label htmlFor="book-title">Search for a book</label>
                 </div>

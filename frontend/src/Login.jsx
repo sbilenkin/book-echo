@@ -29,6 +29,7 @@ function Login({onLogin}) {
 
     return (
         <div className="Login">
+            <h2 className="login-welcome">BookEcho</h2>
             <form className="login-form" onSubmit={handleSubmit}>
                 <div>
                     <label htmlFor="username">Username </label>

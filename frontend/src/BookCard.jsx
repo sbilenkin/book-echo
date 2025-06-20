@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { toast } from 'react-toastify';
 import 'bootstrap/dist/css/bootstrap.css';
 
 function BookCard({ book }) {
@@ -31,11 +32,11 @@ function BookCard({ book }) {
                 body: JSON.stringify(payload),
             });
             if (response.ok) {
-                alert('Review created successfully!');
+                toast.success('Review created successfully!');
                 setSelected(false); // Hide the form after submission
             } else {
                 const errorData = await response.json();
-                alert(`Error creating review: ${errorData.message}`);
+                toast.error(`Error creating review: ${errorData.message}`);
             }
         } catch (error) {
             console.error('Error submitting review:', error);

@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
 import Login from './Login'
 import SignUp from './SignUp'
 import Home from './Home'
@@ -25,6 +27,7 @@ function App() {
           {/* Add more routes as needed */}
         </Routes>
       </div>
+      <ToastContainer />
     </BrowserRouter>
   )
 }

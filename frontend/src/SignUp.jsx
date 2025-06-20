@@ -1,3 +1,4 @@
+import { toast } from 'react-toastify';
 import 'bootstrap/dist/css/bootstrap.css';
 
 function SignUp() {
@@ -10,10 +11,12 @@ function SignUp() {
         });
         const data = await response.json();
         if (response.ok) {
-            alert('Sign up successful! You can now log in.');
-            window.location.href = '/login'; // Redirect to login page after successful sign up
+            toast.success('Sign up successful! You can now log in.');
+            setTimeout(() => {
+                window.location.href = '/login'; // Redirect to login page after 2 seconds
+            }, 2000);
         } else {
-            alert(data.detail || 'Sign up failed');
+            toast.error(data.detail || 'Sign up failed');
         }
     };
 
