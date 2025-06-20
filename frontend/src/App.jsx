@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import Login from './Login'
+import SignUp from './SignUp'
 import Home from './Home'
 import './App.css'
 
@@ -16,6 +17,7 @@ function App() {
             setLoggedIn(true)
             setUsername(sessionStorage.getItem('username') || '')
           }} />} />
+          <Route path="/signup" element={<SignUp />} />
           <Route
             path="/"
             element={loggedIn ? <Home loggedIn={loggedIn} username={username} /> : <Navigate to="/login" />}

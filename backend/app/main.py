@@ -62,7 +62,25 @@ def login(
         return {"message": "Login successful", "user": user}
     else:
         raise HTTPException(status_code=401, detail="Invalid credentials")
-    
+
+@app.post("/signup")
+def signup(
+    username: str = Form(...),
+    password: str = Form(...),
+    db: Session = Depends(get_db)
+):
+    # db query to create a new user
+    try:
+        db.execute(
+            text("INSERT INTO users (username, password) VALUES (:username, :password)"),
+            {"username": username, "password": password}
+        )
+        db.commit()
+        return {"message": "User created successfully"}
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=str(e))
+
 @app.get("/book-search")
 def book_search(title: str = Query(...)):
     openlibrary_url = f"https://openlibrary.org/search.json?title={title}"
