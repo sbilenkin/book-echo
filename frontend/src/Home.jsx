@@ -48,9 +48,9 @@ function Home({ loggedIn, username }) {
                             <li className="nav-item">
                                 <a className="nav-link active" aria-current="page" href="#">Home</a>
                             </li>
-                            <li className="nav-item">
+                            {/* <li className="nav-item">
                                 <a className="nav-link" aria-current="page" href="#">My Reviews</a>
-                            </li>
+                            </li> */}
                             {/* <li className="nav-item">
                                 <a className="nav-link" href="#">Link</a>
                             </li>

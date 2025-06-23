@@ -187,6 +187,7 @@ button:focus-visible {
 
 .review-text {
   text-align: left;
+  margin-top: 0.5rem;
 }
 
 .book-cover {

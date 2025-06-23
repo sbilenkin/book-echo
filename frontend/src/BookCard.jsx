@@ -71,7 +71,15 @@ function BookCard({ book }) {
                             ))}
                         </select>
                     </div>
-                    <button type="submit" className="btn btn-primary">Create Review</button>
+                    <input type="hidden" name="status" value="finished"></input>
+                    <button type="submit"
+                        className="btn btn-primary"
+                        onClick={() => document.getElementById('review-status').value = 'finished'}>
+                        Create Review</button>
+                    {/* <button type="submit"
+                        className="btn btn-primary"
+                        onClick={() => document.getElementById('review-status').value = 'draft'}>
+                        Save Draft</button> */}
                 </form>
             </div>
         </li>
