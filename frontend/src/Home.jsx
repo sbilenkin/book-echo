@@ -7,21 +7,22 @@ function Home({ loggedIn, username }) {
     const [addingReview, setAddingReview] = useState(false);
     const [reviews, setReviews] = useState([]);
 
-    useEffect(() => {
+    const fetchReviews = async () => {
         if (loggedIn) {
-            async function fetchReviews() {
-                console.log('Fetching reviews for user:', sessionStorage.getItem('userId'));
-                const response = await fetch(`http://localhost:8000/reviews?user_id=${sessionStorage.getItem('userId')}`);
-                if (response.ok) {
-                    const data = await response.json();
-                    setReviews(data.reviews || []);
-                    console.log('Fetched reviews:', data.reviews);
-                } else {
-                    console.error('Failed to fetch reviews');
-                }
+            console.log('Fetching reviews for user:', sessionStorage.getItem('userId'));
+            const response = await fetch(`http://localhost:8000/reviews?user_id=${sessionStorage.getItem('userId')}`);
+            if (response.ok) {
+                const data = await response.json();
+                setReviews(data.reviews || []);
+                console.log('Fetched reviews:', data.reviews);
+            } else {
+                console.error('Failed to fetch reviews');
             }
-            fetchReviews();
         }
+    }
+
+    useEffect(() => {
+        fetchReviews();
     }, [loggedIn, addingReview]);
 
     const handleLogout = () => {
@@ -49,7 +50,7 @@ function Home({ loggedIn, username }) {
                                 <a className="nav-link active" aria-current="page" href="#">Home</a>
                             </li>
                             <li className="nav-item">
-                                <a className="nav-link" aria-current="page" href="#">My Reviews</a>
+                                <a className="nav-link" aria-current="page" href="/my-reviews">My Reviews</a>
                             </li>
                             {/* <li className="nav-item">
                                 <a className="nav-link" href="#">Link</a>
@@ -63,8 +64,6 @@ function Home({ loggedIn, username }) {
                 </div>
             </nav>
             <h2>Welcome, {username}</h2>
-            {/* will ultimately put a "my books" list on the homepage
-            listing book reviews in order of most recent */}
             <div>
                 {!addingReview && <button className="btn btn-primary" onClick={handleAddReview}>Add Review</button>}
                 <div>
@@ -72,7 +71,7 @@ function Home({ loggedIn, username }) {
                 </div>
             </div>
             <div className="review-list-container">
-                <ReviewList reviews={reviews} />
+                <ReviewList reviews={reviews} onReviewUpdated={fetchReviews} />
             </div>
         </div>
     );

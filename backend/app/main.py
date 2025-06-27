@@ -7,6 +7,7 @@ import requests
 import json
 
 from app.db.database import SessionLocal
+from app.db.init_db import init_db
 
 app = FastAPI()
 
@@ -19,6 +20,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.on_event("startup")
+def on_startup():
+    init_db()
+
 class ReviewCreate(BaseModel):
     user_id: int
     title: str
@@ -26,6 +31,7 @@ class ReviewCreate(BaseModel):
     cover_i: int | None = None
     comment: str
     rating: int
+    status: str = "pending"
 
 def get_db():
     db = SessionLocal()
@@ -62,7 +68,25 @@ def login(
         return {"message": "Login successful", "user": user}
     else:
         raise HTTPException(status_code=401, detail="Invalid credentials")
-    
+
+@app.post("/signup")
+def signup(
+    username: str = Form(...),
+    password: str = Form(...),
+    db: Session = Depends(get_db)
+):
+    # db query to create a new user
+    try:
+        db.execute(
+            text("INSERT INTO users (username, password) VALUES (:username, :password)"),
+            {"username": username, "password": password}
+        )
+        db.commit()
+        return {"message": "User created successfully"}
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=str(e))
+
 @app.get("/book-search")
 def book_search(title: str = Query(...)):
     openlibrary_url = f"https://openlibrary.org/search.json?title={title}"
@@ -94,8 +118,8 @@ def create_review(
     book_json = json.dumps({"title": review.title, "author": review.author, "cover_i": review.cover_i})
     try:
         db.execute(
-            text("INSERT INTO reviews (user_id, book, rating, comment) VALUES (:user_id, :book, :rating, :comment)"),
-            {"user_id": review.user_id, "book": book_json, "rating": review.rating, "comment": review.comment}
+            text("INSERT INTO reviews (user_id, book, rating, comment, status) VALUES (:user_id, :book, :rating, :comment, :status)"),
+            {"user_id": review.user_id, "book": book_json, "rating": review.rating, "comment": review.comment, "status": review.status}
         )
         db.commit()
         return {"message": "Review created successfully"}
@@ -108,9 +132,56 @@ def get_reviews(user_id: int = Query(...), db: Session = Depends(get_db)):
     try:
         print(f"Fetching reviews for user_id: {user_id}")
         reviews = db.execute(
-            text("SELECT * FROM reviews WHERE user_id = :user_id"),
+            text("SELECT * FROM reviews WHERE user_id = :user_id AND status = 'finished'"),
             {"user_id": user_id}
         ).mappings().fetchall()
         return {"reviews": reviews}
     except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/review-drafts")
+def get_review_drafts(user_id: int = Query(...), db: Session = Depends(get_db)):
+    try:
+        print(f"Fetching reviews for user_id: {user_id}")
+        reviews = db.execute(
+            text("SELECT * FROM reviews WHERE user_id = :user_id AND status = 'draft'"),
+            {"user_id": user_id}
+        ).mappings().fetchall()
+        return {"reviews": reviews}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.put("/edit-review/{review_id}")
+def edit_review(review_id: int, review: ReviewCreate, db: Session = Depends(get_db)):
+    try:
+        db.execute(
+            text("""
+                UPDATE reviews
+                SET comment = :comment, rating = :rating, status = :status
+                WHERE id = :review_id
+            """),
+            {
+                "comment": review.comment,
+                "rating": review.rating,
+                "status": review.status,
+                "review_id": review_id,
+            }
+        )
+        db.commit()
+        return {"message": "Review updated successfully"}
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.delete("/delete-review/{review_id}")
+def delete_review(review_id: int, db: Session = Depends(get_db)):
+    try:
+        db.execute(
+            text("DELETE FROM reviews WHERE id = :review_id"),
+            {"review_id": review_id}
+        )
+        db.commit()
+        return {"message": "Review deleted successfully"}
+    except Exception as e:
+        db.rollback()
         raise HTTPException(status_code=500, detail=str(e))
