@@ -7,6 +7,7 @@ import requests
 import json
 
 from app.db.database import SessionLocal
+from app.db.init_db import init_db
 
 app = FastAPI()
 
@@ -19,6 +20,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.on_event("startup")
+def on_startup():
+    init_db()
+
 class ReviewCreate(BaseModel):
     user_id: int
     title: str
@@ -26,6 +31,7 @@ class ReviewCreate(BaseModel):
     cover_i: int | None = None
     comment: str
     rating: int
+    status: str = "pending"
 
 def get_db():
     db = SessionLocal()
@@ -112,8 +118,8 @@ def create_review(
     book_json = json.dumps({"title": review.title, "author": review.author, "cover_i": review.cover_i})
     try:
         db.execute(
-            text("INSERT INTO reviews (user_id, book, rating, comment) VALUES (:user_id, :book, :rating, :comment)"),
-            {"user_id": review.user_id, "book": book_json, "rating": review.rating, "comment": review.comment}
+            text("INSERT INTO reviews (user_id, book, rating, comment, status) VALUES (:user_id, :book, :rating, :comment)"),
+            {"user_id": review.user_id, "book": book_json, "rating": review.rating, "comment": review.comment, "status": review.status}
         )
         db.commit()
         return {"message": "Review created successfully"}

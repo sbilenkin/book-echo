@@ -14,6 +14,7 @@ function BookCard({ book }) {
         const formData = new FormData(event.target);
         const reviewText = formData.get('review-text');
         const rating = formData.get('rating');
+        const status = formData.get('status');
         const payload = {
             user_id: parseInt(sessionStorage.getItem('userId')),
             title: book.title,
@@ -21,6 +22,7 @@ function BookCard({ book }) {
             cover_i: book.cover_i,
             comment: reviewText,
             rating: parseInt(rating),
+            status,
         };
         console.log(payload);
         try {
@@ -71,15 +73,15 @@ function BookCard({ book }) {
                             ))}
                         </select>
                     </div>
-                    <input type="hidden" name="status" value="finished"></input>
+                    <input type="hidden" id="review-status" name="status" value="finished"></input>
                     <button type="submit"
                         className="btn btn-primary"
                         onClick={() => document.getElementById('review-status').value = 'finished'}>
                         Create Review</button>
-                    {/* <button type="submit"
+                    <button type="submit"
                         className="btn btn-primary"
                         onClick={() => document.getElementById('review-status').value = 'draft'}>
-                        Save Draft</button> */}
+                        Save Draft</button>
                 </form>
             </div>
         </li>
