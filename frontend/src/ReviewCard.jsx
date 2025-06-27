@@ -1,7 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.css';
 import '@fortawesome/fontawesome-free/css/all.css';
 
-function ReviewCard({ review }) {
+function ReviewCard({ review, onEdit }) {
     console.log('ReviewCard:', review);
     const coverUrl = `https://covers.openlibrary.org/b/id/${review.book.cover_i}-M.jpg` || null;
     return (
@@ -18,6 +18,18 @@ function ReviewCard({ review }) {
                     {[...Array(5 - review.rating)].map((_, i) => (<i key={i} className="far fa-star"></i>))}
                     {[...Array(review.rating)].map((_, i) => (<i key={i} className="fas fa-star"></i>))}
                 </div>
+                {review.status === "draft" && (
+                    <i
+                        className="fas fa-pencil corner-btn"
+                        style={{
+                            position: 'absolute',
+                            top: 0,
+                            right: 0,
+                            zIndex: 2
+                        }}
+                        onClick={onEdit}
+                    />
+                )}
             </div>
             <div className="review-text">
                 {review.comment}

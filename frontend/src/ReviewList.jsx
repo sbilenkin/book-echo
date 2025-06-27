@@ -1,12 +1,29 @@
+import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import ReviewCard from './ReviewCard';
+import BookCard from './BookCard';
 
-function ReviewList({ reviews }) {
+function ReviewList({ reviews, onReviewUpdated }) {
+    const [editingReviewId, setEditingReviewId] = useState(null);
+
     return (
         <div className="ReviewList">
-            {/* <h2>My Reviews</h2> */}
             <ul className="review-cards list-group">
-                {reviews.map((review, index) => (<ReviewCard review={review} />))}
+                {reviews.map((review, index) => 
+                    editingReviewId === review.id ? (
+                        <BookCard
+                            key={index}
+                            book={review.book}
+                            initialReviewText={review.comment}
+                            initialRating={review.rating}
+                            onClose={() => setEditingReviewId(null)}
+                            editing={true}
+                            reviewId={review.id}
+                            onReviewUpdated={onReviewUpdated} />
+                    ) : (<ReviewCard
+                            key={review.id}
+                            review={review}
+                            onEdit={() => setEditingReviewId(review.id)} />))}
             </ul>
         </div>
     );

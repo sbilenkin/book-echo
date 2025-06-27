@@ -240,3 +240,7 @@ button:focus-visible {
 .review-heading {
   margin-top: 2rem;
 }
+
+.corner-btn {
+  margin: 1rem;
+}

@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import 'bootstrap/dist/css/bootstrap.css';
 
-function BookCard({ book }) {
-    const [selected, setSelected] = useState(false);
+function BookCard({ book, initialReviewText = '', initialRating = '', onClose, editing = false, reviewId = null, onReviewUpdated }) {
+    const [selected, setSelected] = useState(editing);
+    const [reviewText, setReviewText] = useState(initialReviewText);
+    const [rating, setRating] = useState(initialRating);
 
     const openForm = () => {
         setSelected(true);
@@ -25,17 +27,23 @@ function BookCard({ book }) {
             status,
         };
         console.log(payload);
+        const url = editing
+            ? `http://localhost:8000/edit-review/${reviewId}`
+            : 'http://localhost:8000/create-review';
+        const method = editing ? 'PUT' : 'POST';
         try {
-            const response = await fetch('http://localhost:8000/create-review', {
-                method: 'POST',
+            const response = await fetch(url, {
+                method,
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(payload),
             });
             if (response.ok) {
-                toast.success('Review created successfully!');
-                setSelected(false); // Hide the form after submission
+                toast.success('Review updated successfully!');
+                setSelected(false);
+                if (onClose) onClose();
+                if (onReviewUpdated) onReviewUpdated();
             } else {
                 const errorData = await response.json();
                 toast.error(`Error creating review: ${errorData.message}`);
@@ -62,11 +70,14 @@ function BookCard({ book }) {
                 <form className="book-review-form mt-3" onSubmit={handleReviewSubmit}>
                     <div className="mb-3">
                         <label htmlFor="review-text" className="form-label">Write your review</label>
-                        <textarea className="form-control" id="review-text" name="review-text" rows="3" required></textarea>
+                        <textarea className="form-control" id="review-text" name="review-text" rows="3" required
+                        value={reviewText}
+                        onChange={e => setReviewText(e.target.value)}></textarea>
                     </div>
                     <div className="mb-3">
                         <label htmlFor="rating" className="form-label">Rating</label>
-                        <select name="rating" className="form-select" id="rating" required>
+                        <select name="rating" className="form-select" id="rating" required
+                        value={rating} onChange={e => setRating(e.target.value)}>
                             <option value="">Select a rating</option>
                             {[1, 2, 3, 4, 5].map((num) => (
                                 <option key={num} value={num}>{num} Star{num > 1 ? 's' : ''}</option>
@@ -79,9 +90,14 @@ function BookCard({ book }) {
                         onClick={() => document.getElementById('review-status').value = 'finished'}>
                         Create Review</button>
                     <button type="submit"
-                        className="btn btn-primary"
+                        className="btn btn-primary ms-2"
                         onClick={() => document.getElementById('review-status').value = 'draft'}>
                         Save Draft</button>
+                    {onClose && (
+                        <button type="button" className="btn btn-secondary ms-2" onClick={onClose}>
+                            Cancel
+                        </button>
+                    )}
                 </form>
             </div>
         </li>

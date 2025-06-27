@@ -6,10 +6,9 @@ function MyReviews({ loggedIn }) {
     const [reviews, setReviews] = React.useState([]);
     const [drafts, setDrafts] = React.useState([]);
 
-    React.useEffect(() => {
+    const fetchReviews = async () => {
         if (loggedIn) {
-            async function fetchReviews() {
-                console.log('Fetching reviews for user:', sessionStorage.getItem('userId'));
+            console.log('Fetching reviews for user:', sessionStorage.getItem('userId'));
                 const response = await fetch(`http://localhost:8000/reviews?user_id=${sessionStorage.getItem('userId')}`);
                 if (response.ok) {
                     const data = await response.json();
@@ -18,19 +17,26 @@ function MyReviews({ loggedIn }) {
                 } else {
                     console.error('Failed to fetch reviews');
                 }
-            }
-            fetchReviews();
-            async function fetchDrafts() {
-                console.log('Fetching drafts for user:', sessionStorage.getItem('userId'));
+        }
+    }
+
+    const fetchDrafts = async () => {
+        if (loggedIn) {
+            console.log('Fetching drafts for user:', sessionStorage.getItem('userId'));
                 const response = await fetch(`http://localhost:8000/review-drafts?user_id=${sessionStorage.getItem('userId')}`);
                 if (response.ok) {
                     const data = await response.json();
-                    setDrafts(data.drafts || []);
+                    setDrafts(data.reviews || []);
                     console.log('Fetched drafts:', data.drafts);
                 } else {
                     console.error('Failed to fetch drafts');
                 }
-            }
+        }
+    }
+
+    React.useEffect(() => {
+        if (loggedIn) {
+            fetchReviews();
             fetchDrafts();
         }
     }, [loggedIn]);
@@ -70,9 +76,9 @@ function MyReviews({ loggedIn }) {
                 </div>
             </nav>
             <h2 className="review-heading">My Review Drafts</h2>
-            {drafts.length > 0 ? <ReviewList reviews={drafts} /> : <p className="no-reviews">You have no review drafts.</p>}
+            {drafts.length > 0 ? <ReviewList reviews={drafts} onReviewUpdated={() => {fetchDrafts(); fetchReviews();}} /> : <p className="no-reviews">You have no review drafts.</p>}
             <h2 className="review-heading">My Published Reviews</h2>
-            {reviews.length > 0 ? <ReviewList reviews={reviews} /> : <p className="no-reviews">You have no published reviews.</p>}
+            {reviews.length > 0 ? <ReviewList reviews={reviews} onReviewUpdated={() => {fetchDrafts(); fetchReviews();}} /> : <p className="no-reviews">You have no published reviews.</p>}
         </div>
     );
 }

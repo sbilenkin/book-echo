@@ -150,3 +150,25 @@ def get_review_drafts(user_id: int = Query(...), db: Session = Depends(get_db)):
         return {"reviews": reviews}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+@app.put("/edit-review/{review_id}")
+def edit_review(review_id: int, review: ReviewCreate, db: Session = Depends(get_db)):
+    try:
+        db.execute(
+            text("""
+                UPDATE reviews
+                SET comment = :comment, rating = :rating, status = :status
+                WHERE id = :review_id
+            """),
+            {
+                "comment": review.comment,
+                "rating": review.rating,
+                "status": review.status,
+                "review_id": review_id,
+            }
+        )
+        db.commit()
+        return {"message": "Review updated successfully"}
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=str(e))
