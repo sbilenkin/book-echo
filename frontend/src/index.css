@@ -236,3 +236,7 @@ button:focus-visible {
 .book-select-button {
   background-color: #7646c4 !important;
 }
+
+.review-heading {
+  margin-top: 2rem;
+}

@@ -118,7 +118,7 @@ def create_review(
     book_json = json.dumps({"title": review.title, "author": review.author, "cover_i": review.cover_i})
     try:
         db.execute(
-            text("INSERT INTO reviews (user_id, book, rating, comment, status) VALUES (:user_id, :book, :rating, :comment)"),
+            text("INSERT INTO reviews (user_id, book, rating, comment, status) VALUES (:user_id, :book, :rating, :comment, :status)"),
             {"user_id": review.user_id, "book": book_json, "rating": review.rating, "comment": review.comment, "status": review.status}
         )
         db.commit()
@@ -132,7 +132,19 @@ def get_reviews(user_id: int = Query(...), db: Session = Depends(get_db)):
     try:
         print(f"Fetching reviews for user_id: {user_id}")
         reviews = db.execute(
-            text("SELECT * FROM reviews WHERE user_id = :user_id"),
+            text("SELECT * FROM reviews WHERE user_id = :user_id AND status = 'finished'"),
+            {"user_id": user_id}
+        ).mappings().fetchall()
+        return {"reviews": reviews}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/review-drafts")
+def get_review_drafts(user_id: int = Query(...), db: Session = Depends(get_db)):
+    try:
+        print(f"Fetching reviews for user_id: {user_id}")
+        reviews = db.execute(
+            text("SELECT * FROM reviews WHERE user_id = :user_id AND status = 'draft'"),
             {"user_id": user_id}
         ).mappings().fetchall()
         return {"reviews": reviews}

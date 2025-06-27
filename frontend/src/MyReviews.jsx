@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
-import BookSearch from './BookSearch';
 import ReviewList from './ReviewList';
 
-function Home({ loggedIn, username }) {
-    const [addingReview, setAddingReview] = useState(false);
-    const [reviews, setReviews] = useState([]);
+function MyReviews({ loggedIn }) {
+    const [reviews, setReviews] = React.useState([]);
+    const [drafts, setDrafts] = React.useState([]);
 
-    useEffect(() => {
+    React.useEffect(() => {
         if (loggedIn) {
             async function fetchReviews() {
                 console.log('Fetching reviews for user:', sessionStorage.getItem('userId'));
@@ -21,22 +20,30 @@ function Home({ loggedIn, username }) {
                 }
             }
             fetchReviews();
+            async function fetchDrafts() {
+                console.log('Fetching drafts for user:', sessionStorage.getItem('userId'));
+                const response = await fetch(`http://localhost:8000/review-drafts?user_id=${sessionStorage.getItem('userId')}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    setDrafts(data.drafts || []);
+                    console.log('Fetched drafts:', data.drafts);
+                } else {
+                    console.error('Failed to fetch drafts');
+                }
+            }
+            fetchDrafts();
         }
-    }, [loggedIn, addingReview]);
+    }, [loggedIn]);
 
     const handleLogout = () => {
         sessionStorage.removeItem('loggedIn');
         sessionStorage.removeItem('username');
         sessionStorage.removeItem('userId');
         window.location.reload();
-    };
-
-    const handleAddReview = () => {
-        setAddingReview(true);
     }
 
     return (
-        <div className="Home">
+        <div className="MyReviews">
             <nav className="navbar navbar-expand-lg">
                 <div className="container-fluid">
                     <a className="navbar-brand" href="#">BookEcho</a>
@@ -46,10 +53,10 @@ function Home({ loggedIn, username }) {
                     <div className="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                             <li className="nav-item">
-                                <a className="nav-link active" aria-current="page" href="#">Home</a>
+                                <a className="nav-link" aria-current="page" href="/">Home</a>
                             </li>
                             <li className="nav-item">
-                                <a className="nav-link" aria-current="page" href="/my-reviews">My Reviews</a>
+                                <a className="nav-link" aria-current="page" href="#">My Reviews</a>
                             </li>
                             {/* <li className="nav-item">
                                 <a className="nav-link" href="#">Link</a>
@@ -62,20 +69,12 @@ function Home({ loggedIn, username }) {
                     </div>
                 </div>
             </nav>
-            <h2>Welcome, {username}</h2>
-            {/* will ultimately put a "my books" list on the homepage
-            listing book reviews in order of most recent */}
-            <div>
-                {!addingReview && <button className="btn btn-primary" onClick={handleAddReview}>Add Review</button>}
-                <div>
-                    {addingReview && <BookSearch onClose={() => setAddingReview(false)} />}
-                </div>
-            </div>
-            <div className="review-list-container">
-                <ReviewList reviews={reviews} />
-            </div>
+            <h2 className="review-heading">My Review Drafts</h2>
+            {drafts.length > 0 ? <ReviewList reviews={drafts} /> : <p className="no-reviews">You have no review drafts.</p>}
+            <h2 className="review-heading">My Published Reviews</h2>
+            {reviews.length > 0 ? <ReviewList reviews={reviews} /> : <p className="no-reviews">You have no published reviews.</p>}
         </div>
     );
 }
 
-export default Home;
+export default MyReviews;

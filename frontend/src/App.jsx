@@ -5,6 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Login from './Login'
 import SignUp from './SignUp'
 import Home from './Home'
+import MyReviews from './MyReviews'
 import './App.css'
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
             path="/"
             element={loggedIn ? <Home loggedIn={loggedIn} username={username} /> : <Navigate to="/login" />}
           />
+          <Route path="/my-reviews" element={loggedIn ? <MyReviews loggedIn={loggedIn} /> : <Navigate to="/login" />} />
           {/* Add more routes as needed */}
         </Routes>
       </div>
