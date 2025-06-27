@@ -241,6 +241,11 @@ button:focus-visible {
   margin-top: 2rem;
 }
 
-.corner-btn {
+.corner-trash {
   margin: 1rem;
+}
+
+.corner-pencil {
+  margin-top: 1rem;
+  margin-right: 3rem;
 }

@@ -172,3 +172,16 @@ def edit_review(review_id: int, review: ReviewCreate, db: Session = Depends(get_
     except Exception as e:
         db.rollback()
         raise HTTPException(status_code=500, detail=str(e))
+
+@app.delete("/delete-review/{review_id}")
+def delete_review(review_id: int, db: Session = Depends(get_db)):
+    try:
+        db.execute(
+            text("DELETE FROM reviews WHERE id = :review_id"),
+            {"review_id": review_id}
+        )
+        db.commit()
+        return {"message": "Review deleted successfully"}
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=str(e))

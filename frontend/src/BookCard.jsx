@@ -64,7 +64,7 @@ function BookCard({ book, initialReviewText = '', initialRating = '', onClose, e
                     <h5 className="book-title">{book.title}</h5>
                     <p className="book-author">Author: {book.author}</p>
                 </div>
-                <button className="btn btn-secondary book-select-button" onClick={openForm}>Select</button>
+                {!editing && <button className="btn btn-secondary book-select-button" onClick={openForm}>Select</button>}
             </div>
             <div style={{ display: selected ? 'block' : 'none' }}>
                 <form className="book-review-form mt-3" onSubmit={handleReviewSubmit}>

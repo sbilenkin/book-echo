@@ -6,6 +6,19 @@ import BookCard from './BookCard';
 function ReviewList({ reviews, onReviewUpdated }) {
     const [editingReviewId, setEditingReviewId] = useState(null);
 
+    const handleDelete = async (reviewId) => {
+        if (window.confirm("Are you sure you want to delete this review?")) {
+            const response = await fetch(`http://localhost:8000/delete-review/${reviewId}`, {
+                method: 'DELETE',
+            });
+            if (response.ok) {
+                if (onReviewUpdated) onReviewUpdated(); // Refresh the list
+            } else {
+                alert("Failed to delete review.");
+            }
+        }
+    };
+
     return (
         <div className="ReviewList">
             <ul className="review-cards list-group">
@@ -23,7 +36,8 @@ function ReviewList({ reviews, onReviewUpdated }) {
                     ) : (<ReviewCard
                             key={review.id}
                             review={review}
-                            onEdit={() => setEditingReviewId(review.id)} />))}
+                            onEdit={() => setEditingReviewId(review.id)}
+                            onDelete={() => handleDelete(review.id)} />))}
             </ul>
         </div>
     );

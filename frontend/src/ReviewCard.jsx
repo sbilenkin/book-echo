@@ -1,7 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.css';
 import '@fortawesome/fontawesome-free/css/all.css';
 
-function ReviewCard({ review, onEdit }) {
+function ReviewCard({ review, onEdit, onDelete }) {
     console.log('ReviewCard:', review);
     const coverUrl = `https://covers.openlibrary.org/b/id/${review.book.cover_i}-M.jpg` || null;
     return (
@@ -20,7 +20,7 @@ function ReviewCard({ review, onEdit }) {
                 </div>
                 {review.status === "draft" && (
                     <i
-                        className="fas fa-pencil corner-btn"
+                        className="fas fa-pencil corner-pencil"
                         style={{
                             position: 'absolute',
                             top: 0,
@@ -30,6 +30,14 @@ function ReviewCard({ review, onEdit }) {
                         onClick={onEdit}
                     />
                 )}
+                <i className="fas fa-trash corner-trash"
+                    style={{
+                        position: 'absolute',
+                        top: 0,
+                        right: 0,
+                        zIndex: 2
+                    }}
+                    onClick={onDelete} />
             </div>
             <div className="review-text">
                 {review.comment}
